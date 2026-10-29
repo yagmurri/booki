@@ -1,0 +1,42 @@
+﻿@model Booki.DataAccess.Entities.BookChapter
+
+@{
+    var book = ViewBag.Book as Booki.DataAccess.Entities.Book;
+    ViewData["Title"] = "Bölüm Düzenle";
+}
+
+<div class="container py-4">
+    <h1>Bölüm Düzenle</h1>
+    <p class="text-muted">@book?.Title</p>
+
+    <form asp-action="Edit" method="post" class="mt-4">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="BookId" />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="mb-3">
+            <label asp-for="OrderNumber" class="form-label">Sıra</label>
+            <input asp-for="OrderNumber" class="form-control" />
+            <span asp-validation-for="OrderNumber" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Title" class="form-label">Bölüm Başlığı</label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Content" class="form-label">Metin</label>
+            <textarea asp-for="Content" class="form-control" rows="20"></textarea>
+            <span asp-validation-for="Content" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+        <a asp-action="Index" asp-route-bookId="@Model.BookId" class="btn btn-outline-secondary">Vazgeç</a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "Yönetim Paneli";
+}
+
+<div class="container py-4">
+    <div class="mb-4">
+        <h1>Booki Yönetim Paneli</h1>
+        <p class="text-muted">Hoş geldin, @User.Identity?.Name</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title">Kitaplar</h3>
+                    <p class="card-text">
+                        Kitapları ekle, düzenle ve yayından kaldır.
+                    </p>
+                    <span class="btn btn-primary disabled">Kitap Yönetimi</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title">Yazarlar</h3>
+                    <p class="card-text">
+                        Yazar bilgilerini yönet.
+                    </p>
+                    <span class="btn btn-primary disabled">Yazar Yönetimi</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title">Kategoriler</h3>
+                    <p class="card-text">
+                        Kitap kategorilerini düzenle.
+                    </p>
+                    <a class="btn btn-primary"
+                       asp-area="Admin"
+                       asp-controller="Categories"
+                       asp-action="Index">
+                        Kategori Yönetimi
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

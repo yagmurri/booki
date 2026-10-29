@@ -1,0 +1,57 @@
+﻿@model List<Booki.DataAccess.Entities.Book>
+
+@{
+    ViewData["Title"] = "Favorilerim";
+}
+
+<div class="py-4">
+    <h1 class="mb-4">Favorilerim</h1>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center text-muted py-5">
+            <p class="mb-3">Henüz favori kitabın yok.</p>
+            <a asp-controller="Books" asp-action="Index" class="btn btn-outline-primary">Kitaplara göz at</a>
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+            @foreach (var book in Model)
+            {
+                <div class="col">
+                    <div class="card h-100">
+                        @if (!string.IsNullOrWhiteSpace(book.CoverImageUrl))
+                        {
+                            <img src="@book.CoverImageUrl" class="card-img-top" alt="@book.Title"
+                                 style="height: 300px; object-fit: cover;" />
+                        }
+                        else
+                        {
+                            <div class="bg-light d-flex align-items-center justify-content-center text-muted"
+                                 style="height: 300px;">
+                                Kapak yok
+                            </div>
+                        }
+
+                        <div class="card-body">
+                            <h5 class="card-title">@book.Title</h5>
+                            <p class="card-text mb-1">@book.Author?.FullName</p>
+                            <p class="card-text text-muted small mb-0">
+                                @book.Category?.Name
+                                @if (book.PublishedYear != null)
+                                {
+                                    <span>· @book.PublishedYear</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="card-footer bg-transparent border-top-0 pb-3">
+                            <a asp-controller="Books" asp-action="Details" asp-route-id="@book.Id"
+                               class="btn btn-sm btn-outline-primary">Detay</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

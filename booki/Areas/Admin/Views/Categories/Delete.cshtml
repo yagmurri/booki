@@ -1,0 +1,28 @@
+﻿@model Booki.DataAccess.Entities.Category
+
+@{
+    ViewData["Title"] = "Kategori Sil";
+}
+
+<div class="container py-4">
+    <h1>Kategori Sil</h1>
+
+    <div class="alert alert-warning mt-3">
+        Bu kategoriyi silmek istediğine emin misin? Bu işlem geri alınamaz.
+    </div>
+
+    <dl class="row">
+        <dt class="col-sm-2">Ad</dt>
+        <dd class="col-sm-10">@Model.Name</dd>
+
+        <dt class="col-sm-2">Açıklama</dt>
+        <dd class="col-sm-10">@Model.Description</dd>
+    </dl>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+
+        <button type="submit" class="btn btn-danger">Evet, Sil</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Vazgeç</a>
+    </form>
+</div>

@@ -1,0 +1,60 @@
+﻿@using Booki.DataAccess.Entities
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<ul class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        var currentUser = await UserManager.GetUserAsync(User);
+
+        if (currentUser is not null &&
+        await UserManager.IsInRoleAsync(currentUser, "Admin"))
+        {
+            <li class="nav-item">
+                <a class="nav-link text-dark"
+                   asp-area="Admin"
+                   asp-controller="Dashboard"
+                   asp-action="Index">
+                    Yönetim Paneli
+                </a>
+            </li>
+        }
+
+        <li class="nav-item">
+            <a class="nav-link text-dark"
+               asp-area="Identity"
+               asp-page="/Account/Manage/Index">
+                Merhaba, @UserManager.GetUserName(User)!
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <form asp-area="Identity"
+                  asp-page="/Account/Logout"
+                  asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button type="submit" class="nav-link btn btn-link text-dark border-0">
+                    Çıkış Yap
+                </button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark"
+               asp-area="Identity"
+               asp-page="/Account/Register">
+                Kayıt Ol
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link text-dark"
+               asp-area="Identity"
+               asp-page="/Account/Login">
+                Giriş Yap
+            </a>
+        </li>
+    }
+</ul>

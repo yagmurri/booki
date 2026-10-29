@@ -1,0 +1,103 @@
+﻿@model List<Booki.DataAccess.Entities.Book>
+
+@{
+    ViewData["Title"] = "Kitaplar";
+    var search = ViewBag.Search as string;
+    var selectedCategoryId = ViewBag.SelectedCategoryId as int?;
+    var selectedAuthorId = ViewBag.SelectedAuthorId as int?;
+    var categories = ViewBag.Categories as List<Booki.DataAccess.Entities.Category> ?? new List<Booki.DataAccess.Entities.Category>();
+    var authors = ViewBag.Authors as List<Booki.DataAccess.Entities.Author> ?? new List<Booki.DataAccess.Entities.Author>();
+    var hasFilter = !string.IsNullOrWhiteSpace(search) || selectedCategoryId != null || selectedAuthorId != null;
+}
+<div class="py-4">
+    <h1 class="mb-4">Kitaplar</h1>
+    <form asp-action="Index" method="get" class="row g-2 mb-4">
+        <div class="col-sm-12 col-md-4">
+            <input type="text" name="search" value="@search" class="form-control"
+                   placeholder="Kitap adı veya yazar ara..." />
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <select name="categoryId" class="form-select">
+                <option value="">Tüm kategoriler</option>
+                @foreach (var category in categories)
+                {
+                    <option value="@category.Id" selected="@(selectedCategoryId == category.Id)">
+                        @category.Name
+                    </option>
+                }
+            </select>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <select name="authorId" class="form-select">
+                <option value="">Tüm yazarlar</option>
+                @foreach (var author in authors)
+                {
+                    <option value="@author.Id" selected="@(selectedAuthorId == author.Id)">
+                        @author.FullName
+                    </option>
+                }
+            </select>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Ara</button>
+            @if (hasFilter)
+            {
+                <a asp-action="Index" class="btn btn-outline-secondary">Temizle</a>
+            }
+        </div>
+    </form>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center text-muted py-5">
+            @if (hasFilter)
+            {
+                <p class="mb-0">Aramanla eşleşen kitap bulunamadı.</p>
+            }
+            else
+            {
+                <p class="mb-0">Henüz kitap eklenmemiş.</p>
+            }
+        </div>
+    }
+    
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+            @foreach (var book in Model)
+            {
+                <div class="col">
+                    <div class="card h-100">
+                        @if (!string.IsNullOrWhiteSpace(book.CoverImageUrl))
+                        {
+                            <img src="@book.CoverImageUrl" class="card-img-top" alt="@book.Title"
+                                 style="height: 300px; object-fit: cover;" />
+                        }
+                        else
+                        {
+                            <div class="bg-light d-flex align-items-center justify-content-center text-muted"
+                                 style="height: 300px;">
+                                Kapak yok
+                            </div>
+                        }
+
+                        <div class="card-body">
+                            <h5 class="card-title">@book.Title</h5>
+                            <p class="card-text mb-1">@book.Author?.FullName</p>
+                            <p class="card-text text-muted small mb-0">
+                                @book.Category?.Name
+                                @if (book.PublishedYear != null)
+                                {
+                                    <span>· @book.PublishedYear</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="card-footer bg-transparent border-top-0 pb-3">
+                            <a asp-action="Details" asp-route-id="@book.Id" class="btn btn-sm btn-outline-primary">
+                                Detay
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

@@ -1,0 +1,48 @@
+﻿@model Booki.DataAccess.Entities.Author
+
+@{
+    ViewData["Title"] = "Yeni Yazar Ekle";
+}
+
+<div class="container py-4">
+    <h1>Yeni Yazar Ekle</h1>
+
+    <form asp-action="Create" method="post" class="mt-4">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="mb-3">
+            <label asp-for="FullName" class="form-label">Ad Soyad</label>
+            <input asp-for="FullName" class="form-control" />
+            <span asp-validation-for="FullName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="BirthYear" class="form-label">Doğum Yılı</label>
+            <input asp-for="BirthYear" class="form-control" />
+            <span asp-validation-for="BirthYear" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="DeathYear" class="form-label">Ölüm Yılı</label>
+            <input asp-for="DeathYear" class="form-control" />
+            <span asp-validation-for="DeathYear" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Biography" class="form-label">Biyografi</label>
+            <textarea asp-for="Biography" class="form-control" rows="4"></textarea>
+            <span asp-validation-for="Biography" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            Vazgeç
+        </a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

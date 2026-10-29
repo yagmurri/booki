@@ -1,0 +1,89 @@
+﻿@model Booki.DataAccess.Entities.Book
+
+@{
+    ViewData["Title"] = "Kitap Düzenle";
+}
+
+<div class="container py-4">
+    <h1>Kitap Düzenle</h1>
+
+    <form asp-action="Edit" method="post" class="mt-4">
+        <input type="hidden" asp-for="Id" />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="mb-3">
+            <label asp-for="Title" class="form-label">Başlık</label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Summary" class="form-label">Özet</label>
+            <textarea asp-for="Summary" class="form-control" rows="4"></textarea>
+            <span asp-validation-for="Summary" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="PublishedYear" class="form-label">Yayın Yılı</label>
+            <input asp-for="PublishedYear" class="form-control" />
+            <span asp-validation-for="PublishedYear" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="CoverImageUrl" class="form-label">Kapak Görseli URL</label>
+            <input asp-for="CoverImageUrl" class="form-control" />
+            <span asp-validation-for="CoverImageUrl" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="AuthorId" class="form-label">Yazar</label>
+            <select asp-for="AuthorId" asp-items="ViewBag.Authors" class="form-select">
+                <option value="">-- Yazar Seçin --</option>
+            </select>
+            <span asp-validation-for="AuthorId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="CategoryId" class="form-label">Kategori</label>
+            <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-select">
+                <option value="">-- Kategori Seçin --</option>
+            </select>
+            <span asp-validation-for="CategoryId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="SourceName" class="form-label">Kaynak Adı</label>
+            <input asp-for="SourceName" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="SourceUrl" class="form-label">Kaynak URL</label>
+            <input asp-for="SourceUrl" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="CopyrightStatus" class="form-label">Telif Durumu</label>
+            <input asp-for="CopyrightStatus" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Translator" class="form-label">Çevirmen</label>
+            <input asp-for="Translator" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="TranslationCopyrightStatus" class="form-label">Çeviri Telif Durumu</label>
+            <input asp-for="TranslationCopyrightStatus" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            Vazgeç
+        </a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

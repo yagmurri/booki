@@ -1,0 +1,98 @@
+﻿@model Booki.DataAccess.Entities.Book
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="py-4">
+    <a asp-action="Index" class="btn btn-outline-secondary btn-sm mb-4">← Kitaplara dön</a>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            @if (!string.IsNullOrWhiteSpace(Model.CoverImageUrl))
+            {
+                <img src="@Model.CoverImageUrl" class="img-fluid rounded" alt="@Model.Title" />
+            }
+            else
+            {
+                <div class="bg-light d-flex align-items-center justify-content-center text-muted rounded"
+                     style="height: 400px;">
+                    Kapak yok
+                </div>
+            }
+        </div>0
+
+        <div class="col-md-8">
+            <h1>@Model.Title</h1>
+            <p class="lead mb-1">@Model.Author?.FullName</p>
+            <p class="text-muted">
+                @Model.Category?.Name
+                @if (Model.PublishedYear != null)
+                {
+                    <span>· @Model.PublishedYear</span>
+                }
+            </p>
+            <a asp-action="Read" asp-route-id="@Model.Id" class="btn btn-primary mb-3">
+                @((ViewBag.HasProgress as bool? ?? false) ? "Kaldığın yerden devam et" : "Oku")
+            </a>
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                var isFavorite = ViewBag.IsFavorite as bool? ?? false;
+
+                <form asp-controller="Favorites" asp-action="Toggle" method="post" class="d-inline">
+                    <input type="hidden" name="bookId" value="@Model.Id" />
+                    <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                    <button type="submit" class="btn @(isFavorite ? "btn-warning" : "btn-outline-warning") mb-3">
+                        @(isFavorite ? "Favoriden çıkar" : "Favorilere ekle")
+                    </button>
+                </form>
+            }
+            else
+            {
+                <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-secondary mb-3">Favorilere eklemek için giriş yap</a>
+            }
+
+            @if (!string.IsNullOrWhiteSpace(Model.Summary))
+            {
+                <h5 class="mt-4">Özet</h5>
+                <p>@Model.Summary</p>
+            }
+
+            <h5 class="mt-4">Kaynak ve Telif Bilgisi</h5>
+            <dl class="row">
+                @if (!string.IsNullOrWhiteSpace(Model.SourceName))
+                {
+                    <dt class="col-sm-4">Kaynak</dt>
+                    <dd class="col-sm-8">
+                        @if (!string.IsNullOrWhiteSpace(Model.SourceUrl))
+                        {
+                            <a href="@Model.SourceUrl" target="_blank" rel="noopener noreferrer">@Model.SourceName</a>
+                        }
+                        else
+                        {
+                            @Model.SourceName
+                        }
+                    </dd>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(Model.CopyrightStatus))
+                {
+                    <dt class="col-sm-4">Telif Durumu</dt>
+                    <dd class="col-sm-8">@Model.CopyrightStatus</dd>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(Model.Translator))
+                {
+                    <dt class="col-sm-4">Çevirmen</dt>
+                    <dd class="col-sm-8">@Model.Translator</dd>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(Model.TranslationCopyrightStatus))
+                {
+                    <dt class="col-sm-4">Çeviri Telif Durumu</dt>
+                    <dd class="col-sm-8">@Model.TranslationCopyrightStatus</dd>
+                }
+            </dl>
+        </div>
+    </div>
+</div>

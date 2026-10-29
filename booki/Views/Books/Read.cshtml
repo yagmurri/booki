@@ -1,0 +1,68 @@
+﻿@model Booki.DataAccess.Entities.BookChapter
+
+@{
+    var book = ViewBag.Book as Booki.DataAccess.Entities.Book;
+    var chapters = ViewBag.Chapters as List<Booki.DataAccess.Entities.BookChapter> ?? new List<Booki.DataAccess.Entities.BookChapter>();
+    var previousId = ViewBag.PreviousChapterId as int?;
+    var nextId = ViewBag.NextChapterId as int?;
+    ViewData["Title"] = $"{book?.Title} - {Model.Title}";
+}
+
+<div class="py-4">
+    <a asp-action="Details" asp-route-id="@book?.Id" class="btn btn-outline-secondary btn-sm mb-4">← Kitap sayfasına dön</a>
+
+    <div class="row g-4">
+        <div class="col-md-3">
+            <h6 class="text-muted">@book?.Title</h6>
+            <p class="small text-muted">@book?.Author?.FullName</p>
+
+            <div class="list-group">
+                @foreach (var c in chapters)
+                {
+                    <a asp-action="Read" asp-route-id="@book?.Id" asp-route-chapter="@c.Id"
+                       class="list-group-item list-group-item-action @(c.Id == Model.Id ? "active" : "")">
+                        @c.OrderNumber. @c.Title
+                    </a>
+                }
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <h2 class="mb-4">@Model.Title</h2>
+
+            <div style="white-space: pre-wrap; line-height: 1.8; font-size: 1.1rem; max-width: 750px;">@Model.Content</div>
+
+            <div class="d-flex justify-content-between mt-5">
+                @if (previousId != null)
+                {
+                    <a asp-action="Read" asp-route-id="@book?.Id" asp-route-chapter="@previousId" class="btn btn-outline-primary">← Önceki bölüm</a>
+                }
+                else
+                {
+                    <span></span>
+                }
+
+                @if (nextId != null)
+                {
+                    <a asp-action="Read" asp-route-id="@book?.Id" asp-route-chapter="@nextId" class="btn btn-primary">Sonraki bölüm →</a>
+                }
+            </div>
+
+            <hr class="mt-5" />
+            <p class="small text-muted mb-0">
+                @if (!string.IsNullOrWhiteSpace(book?.SourceName))
+                {
+                    <span>Kaynak: @book.SourceName.</span>
+                }
+                @if (!string.IsNullOrWhiteSpace(book?.CopyrightStatus))
+                {
+                    <span>Telif durumu: @book.CopyrightStatus.</span>
+                }
+                @if (!string.IsNullOrWhiteSpace(book?.TranslationCopyrightStatus))
+                {
+                    <span>Çeviri telif durumu: @book.TranslationCopyrightStatus.</span>
+                }
+            </p>
+        </div>
+    </div>
+</div>
