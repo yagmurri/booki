@@ -23,6 +23,8 @@ public class BookiDbContext : IdentityDbContext<ApplicationUser>
 
     public DbSet<ReadingProgress> ReadingProgresses => Set<ReadingProgress>();
 
+    public DbSet<Bookmark> Bookmarks => Set<Bookmark>();
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -34,6 +36,11 @@ public class BookiDbContext : IdentityDbContext<ApplicationUser>
         builder.Entity<ReadingProgress>()
     .HasIndex(progress => new { progress.UserId, progress.BookId })
     .IsUnique();
+
+        builder.Entity<Bookmark>()
+    .HasIndex(bookmark => new { bookmark.UserId, bookmark.ChapterId })
+    .IsUnique();
     }
+
 
 }
