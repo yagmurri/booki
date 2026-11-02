@@ -79,6 +79,12 @@ public class BooksController(BookiDbContext context) : Controller
         ViewBag.IsFavorite = isFavorite;
         ViewBag.HasProgress = hasProgress;
 
+        ViewBag.Comments = await context.Comments
+    .Where(c => c.BookId == id)
+    .OrderByDescending(c => c.CreatedAt)
+    .Include(c => c.User)
+    .ToListAsync();
+
         return View(book);
     }
     public async Task<IActionResult> Read(int id, int? chapter)
@@ -160,6 +166,16 @@ public class BooksController(BookiDbContext context) : Controller
         }
 
         var current = await context.BookChapters.FindAsync(currentInfo.Id);
+
+        var isBookmarked = false;
+
+        if (userId != null)
+        {
+            isBookmarked = await context.Bookmarks
+                .AnyAsync(b => b.UserId == userId && b.ChapterId == currentInfo.Id);
+        }
+
+        ViewBag.IsBookmarked = isBookmarked;
 
         var index = chapters.IndexOf(currentInfo);
 

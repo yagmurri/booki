@@ -1,0 +1,50 @@
+﻿@model List<Booki.DataAccess.Entities.Bookmark>
+
+@{
+    ViewData["Title"] = "Yer İmlerim";
+    var chapterTitles = ViewBag.ChapterTitles as Dictionary<int, string> ?? new Dictionary<int, string>();
+}
+
+<div class="py-4">
+    <h1 class="mb-4">Yer İmlerim</h1>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center text-muted py-5">
+            <p class="mb-3">Henüz yer imi eklemedin.</p>
+            <a asp-controller="Books" asp-action="Index" class="btn btn-outline-primary">Kitaplara göz at</a>
+        </div>
+    }
+    else
+    {
+        <div class="list-group">
+            @foreach (var bookmark in Model)
+            {
+                var book = bookmark.Book!;
+
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-1">@book.Title</h5>
+                        <p class="mb-1 text-muted">
+                            @book.Author?.FullName · @chapterTitles[bookmark.ChapterId]
+                        </p>
+                        <small class="text-muted">
+                            Eklendi: @bookmark.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")
+                        </small>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <a asp-controller="Books" asp-action="Read" asp-route-id="@book.Id"
+                           asp-route-chapter="@bookmark.ChapterId" class="btn btn-sm btn-primary">Bölüme git</a>
+
+                        <form asp-controller="Bookmarks" asp-action="Toggle" method="post">
+                            <input type="hidden" name="chapterId" value="@bookmark.ChapterId" />
+                            <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Kaldır</button>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

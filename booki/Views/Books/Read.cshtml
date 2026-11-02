@@ -28,7 +28,21 @@
         </div>
 
         <div class="col-md-9">
-            <h2 class="mb-4">@Model.Title</h2>
+            <div class="d-flex justify-content-between align-items-start mb-4">
+                <h2 class="mb-0">@Model.Title</h2>
+
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    var isBookmarked = ViewBag.IsBookmarked as bool? ?? false;
+
+                    <form asp-controller="Bookmarks" asp-action="Toggle" method="post">
+                        <input type="hidden" name="chapterId" value="@Model.Id" />
+                        <button type="submit" class="btn btn-sm @(isBookmarked ? "btn-info" : "btn-outline-info")">
+                            @(isBookmarked ? "Yer iminden çıkar" : "Yer imine ekle")
+                        </button>
+                    </form>
+                }
+            </div>
 
             <div style="white-space: pre-wrap; line-height: 1.8; font-size: 1.1rem; max-width: 750px;">@Model.Content</div>
 

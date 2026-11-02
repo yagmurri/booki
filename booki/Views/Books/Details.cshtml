@@ -95,4 +95,58 @@
             </dl>
         </div>
     </div>
+
+    @{
+        var comments = ViewBag.Comments as List<Booki.DataAccess.Entities.Comment>
+        ?? new List<Booki.DataAccess.Entities.Comment>();
+    }
+
+    <hr class="my-5" />
+
+    <h4 class="mb-3">Yorumlar (@comments.Count)</h4>
+
+    @if (TempData["CommentError"] != null)
+    {
+        <div class="alert alert-danger">@TempData["CommentError"]</div>
+    }
+
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <form asp-controller="Comments" asp-action="Create" method="post" class="mb-4">
+            <input type="hidden" name="bookId" value="@Model.Id" />
+            <div class="mb-2">
+                <textarea name="content" class="form-control" rows="3" maxlength="1000"
+                          placeholder="Bu kitap hakkında ne düşünüyorsun?"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm">Yorum yap</button>
+        </form>
+    }
+    else
+    {
+        <p class="text-muted mb-4">Yorum yazmak için giriş yapmalısın.</p>
+    }
+
+    @if (!comments.Any())
+    {
+        <p class="text-muted">Henüz yorum yazılmamış.</p>
+    }
+    else
+    {
+        foreach (var comment in comments)
+        {
+            <div class="border rounded p-3 mb-3">
+                <div class="d-flex justify-content-between">
+                    <strong>@(comment.User?.UserName ?? "Silinmiş kullanıcı")</strong>
+                    <small class="text-muted">
+                        @comment.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")
+                        @if (comment.UpdatedAt != null)
+                        {
+                            <span>(düzenlendi)</span>
+                        }
+                    </small>
+                </div>
+                <div class="mt-2" style="white-space: pre-wrap;">@comment.Content</div>
+            </div>
+        }
+    }
 </div>

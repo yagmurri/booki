@@ -56,5 +56,45 @@ public class BookmarksController(BookiDbContext context) : Controller
         }
 
         return RedirectToAction("Read", "Books", new { id = chapter.BookId, chapter = chapter.Id });
+
+
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Index()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (userId == null)
+        {
+            return Challenge();
+        }
+
+        var bookmarks = await context.Bookmarks
+            .Where(b => b.UserId == userId)
+            .OrderByDescending(b => b.CreatedAt)
+            .Include(b => b.Book).ThenInclude(book => book!.Author)
+            .ToListAsync();
+
+        bookmarks = bookmarks
+            .Where(b => b.Book != null)
+            .ToList();
+
+        var chapterIds = bookmarks.Select(b => b.ChapterId).ToList();
+
+        var chapterTitles = await context.BookChapters
+            .Where(c => chapterIds.Contains(c.Id))
+            .Select(c => new { c.Id, c.Title, c.OrderNumber })
+            .ToDictionaryAsync(c => c.Id);
+
+        bookmarks = bookmarks
+            .Where(b => chapterTitles.ContainsKey(b.ChapterId))
+            .ToList();
+
+        ViewBag.ChapterTitles = chapterTitles.ToDictionary(
+            c => c.Key,
+            c => $"{c.Value.OrderNumber}. {c.Value.Title}");
+
+        return View(bookmarks);
     }
 }
