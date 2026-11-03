@@ -27,6 +27,8 @@ public class BookiDbContext : IdentityDbContext<ApplicationUser>
 
     public DbSet<Comment> Comments => Set<Comment>();
 
+    public DbSet<Quote> Quotes => Set<Quote>();
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -49,6 +51,13 @@ public class BookiDbContext : IdentityDbContext<ApplicationUser>
 
         builder.Entity<Comment>()
     .HasIndex(comment => comment.BookId);
+
+        builder.Entity<Quote>()
+    .Property(quote => quote.Text)
+    .HasMaxLength(1000);
+
+        builder.Entity<Quote>()
+            .HasIndex(quote => quote.UserId);
     }
 
 

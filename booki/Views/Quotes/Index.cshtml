@@ -1,0 +1,44 @@
+﻿@model List<Booki.DataAccess.Entities.Quote>
+
+@{
+    ViewData["Title"] = "Alıntılarım";
+    var chapterTitles = ViewBag.ChapterTitles as Dictionary<int, string> ?? new Dictionary<int, string>();
+}
+
+<div class="py-4">
+    <h1 class="mb-4">Alıntılarım</h1>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center text-muted py-5">
+            <p class="mb-3">Henüz alıntı kaydetmedin.</p>
+            <a asp-controller="Books" asp-action="Index" class="btn btn-outline-primary">Kitaplara göz at</a>
+        </div>
+    }
+    else
+    {
+        @foreach (var quote in Model)
+        {
+            var book = quote.Book!;
+
+            <div class="border rounded p-3 mb-3">
+                <blockquote class="mb-2" style="white-space: pre-wrap;">@quote.Text</blockquote>
+
+                <p class="text-muted small mb-2">
+                    @book.Title · @book.Author?.FullName · @chapterTitles[quote.ChapterId]
+                    <br />
+                    Eklendi: @quote.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")
+                </p>
+
+                <div class="d-flex gap-2">
+                    <a asp-controller="Books" asp-action="Read" asp-route-id="@book.Id"
+                       asp-route-chapter="@quote.ChapterId" class="btn btn-sm btn-primary">Bölüme git</a>
+
+                    <form asp-controller="Quotes" asp-action="Delete" asp-route-id="@quote.Id" method="post">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Sil</button>
+                    </form>
+                </div>
+            </div>
+        }
+    }
+</div>

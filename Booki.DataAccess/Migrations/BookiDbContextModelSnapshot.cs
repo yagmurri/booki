@@ -307,6 +307,41 @@ namespace Booki.DataAccess.Migrations
                     b.ToTable("Favorites");
                 });
 
+            modelBuilder.Entity("Booki.DataAccess.Entities.Quote", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ChapterId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Quotes");
+                });
+
             modelBuilder.Entity("Booki.DataAccess.Entities.ReadingProgress", b =>
                 {
                     b.Property<int>("Id")
@@ -544,6 +579,25 @@ namespace Booki.DataAccess.Migrations
                 });
 
             modelBuilder.Entity("Booki.DataAccess.Entities.Favorite", b =>
+                {
+                    b.HasOne("Booki.DataAccess.Entities.Book", "Book")
+                        .WithMany()
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Booki.DataAccess.Entities.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Booki.DataAccess.Entities.Quote", b =>
                 {
                     b.HasOne("Booki.DataAccess.Entities.Book", "Book")
                         .WithMany()

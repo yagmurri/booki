@@ -61,7 +61,26 @@
                     <a asp-action="Read" asp-route-id="@book?.Id" asp-route-chapter="@nextId" class="btn btn-primary">Sonraki bölüm →</a>
                 }
             </div>
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <div class="mt-5">
+                    <h5>Alıntı kaydet</h5>
 
+                    @if (TempData["QuoteMessage"] != null)
+                    {
+                        <div class="alert alert-info py-2">@TempData["QuoteMessage"]</div>
+                    }
+
+                    <form asp-controller="Quotes" asp-action="Create" method="post">
+                        <input type="hidden" name="chapterId" value="@Model.Id" />
+                        <div class="mb-2">
+                            <textarea name="text" class="form-control" rows="3" maxlength="1000"
+                                      placeholder="Beğendiğin pasajı buraya yapıştır..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-outline-primary btn-sm">Alıntıyı kaydet</button>
+                    </form>
+                </div>
+            }
             <hr class="mt-5" />
             <p class="small text-muted mb-0">
                 @if (!string.IsNullOrWhiteSpace(book?.SourceName))

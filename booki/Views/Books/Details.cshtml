@@ -146,6 +146,27 @@
                     </small>
                 </div>
                 <div class="mt-2" style="white-space: pre-wrap;">@comment.Content</div>
+
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    var isOwner = comment.UserId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+                    if (isOwner || User.IsInRole("Admin"))
+                    {
+                        <div class="d-flex gap-2 mt-2">
+                            @if (isOwner)
+                            {
+                                <a asp-controller="Comments" asp-action="Edit" asp-route-id="@comment.Id"
+                                   class="btn btn-sm btn-outline-primary">Düzenle</a>
+                            }
+
+                            <form asp-controller="Comments" asp-action="Delete" asp-route-id="@comment.Id" method="post">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Sil</button>
+                            </form>
+                        </div>
+                    }
+                
+                }
             </div>
         }
     }
